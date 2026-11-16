@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "770260871520",
+    "project_id": "klima-dev-93a2d",
+    "storage_bucket": "klima-dev-93a2d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770260871520:android:7a2acad10940ef13855605",
+        "android_client_info": {
+          "package_name": "id.klima.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770260871520-jb0ldmt216gjicoj95j3jo1a3tm6set3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9PBKKOneQengGcp7NdwiThQMNqns5PbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770260871520-jb0ldmt216gjicoj95j3jo1a3tm6set3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
