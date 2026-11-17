@@ -26,3 +26,7 @@ SourceGambarDesign.zip
 *.keystore
 *.jks
 key.properties
+
+# Claude Code local preview helpers (machine-specific paths)
+.claude/launch.json
+.claude/*.bat

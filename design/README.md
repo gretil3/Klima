@@ -18,7 +18,9 @@ Sumber kebenaran desain adalah **Figma**. Folder ini hanya berisi gambar acuan u
 ## Token ringkas
 - Font: **Nunito**. Skala: Display 48/900, Title 28/900, Header 24/900, Section 17/900, Body 15/700, Meta 13/800, Caption 12/900.
 - Ikon: **Phosphor Bold**.
-- Warna mengikuti rasio 60 (Main) / 30 (Charm) / 10 (Spirit). Nilai pastinya diambil dari Figma saat membuat file token di `app/lib/core/theme/`.
+- Warna mengikuti rasio 60 (Main) / 30 (Charm) / 10 (Spirit).
+- Nilai pasti semua token (warna, palet 7 spirit, tipografi, spasi, radius, bayangan keras) ada di `app/lib/core/theme/`, impor lewat `tokens.dart`. Setiap nilai diberi komentar node Figma sumbernya.
+- Pratinjau token (alat bantu, bukan bagian app): `flutter run -d chrome -t lib/dev/token_preview.dart` dari folder `app/`.
 
 ## Gambar acuan (`reference/`)
 
