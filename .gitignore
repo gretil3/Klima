@@ -17,6 +17,9 @@ service-account*.json
 node_modules/
 functions/lib/
 
+# Design source archive (contents are unzipped in design/reference/)
+SourceGambarDesign.zip
+
 # Secrets - never commit
 .env
 .env.*
