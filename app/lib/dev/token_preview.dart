@@ -5,6 +5,7 @@
 
 import 'package:material_ui/material_ui.dart';
 
+import '../core/assets/klima_assets.dart';
 import '../core/theme/theme.dart';
 
 void main() => runApp(const TokenPreviewApp());
@@ -45,6 +46,7 @@ class TokenPreviewPage extends StatelessWidget {
             _SpiritSection(),
             _TypeSection(),
             _WeightSection(),
+            _AssetSection(),
             _SpacingSection(),
             _RadiusSection(),
             _ShadowSection(),
@@ -132,7 +134,7 @@ class _Intro extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Klima', style: _ink(KlimaTypography.display)),
-        Text('Token desain · langkah 2', style: _ink(KlimaTypography.title)),
+        Text('Token desain · langkah 3', style: _ink(KlimaTypography.title)),
         const SizedBox(height: KlimaSpacing.sm),
         Container(
           padding: const EdgeInsets.all(KlimaSpacing.sm),
@@ -608,6 +610,160 @@ class _WeightSection extends StatelessWidget {
       ),
     );
   }
+}
+
+// ---------------------------------------------------------------- assets
+
+/// Bukti langkah 3: hero dipotong seperti Figma 29:20 (390 x 466, cover), dan tiap
+/// mascot tampil di atas papan catur (latar transparan terlihat menembus) dan di atas
+/// warna ground spiritnya, dalam ukuran Profil (160), Spirit hero (148) dan avatar (26).
+class _AssetSection extends StatelessWidget {
+  const _AssetSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final spirit = KlimaSpiritTheme.of(context).palette;
+    return _Section(
+      title: 'Aset gambar',
+      node: '26:2..26:8 · 17:3',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'hero · 390 × 466 · cover (29:20)',
+            style: _ink(KlimaTypography.meta),
+          ),
+          const SizedBox(height: KlimaSpacing.xs),
+          ClipRRect(
+            borderRadius: KlimaRadii.tileAll,
+            child: AspectRatio(
+              aspectRatio: 390 / 466,
+              child: Image.asset(KlimaAssets.hero, fit: BoxFit.cover),
+            ),
+          ),
+          const SizedBox(height: KlimaSpacing.lg),
+          Text(
+            'mascot ${spirit.displayName} · 160 (Profil 32:101)',
+            style: _ink(KlimaTypography.meta),
+          ),
+          const SizedBox(height: KlimaSpacing.xs),
+          Row(
+            children: [
+              _Checker(child: Image.asset(spirit.mascot, width: 160)),
+              const SizedBox(width: KlimaSpacing.sm),
+              Expanded(
+                child: Container(
+                  height: 160,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: spirit.ground,
+                    borderRadius: KlimaRadii.cardAll,
+                  ),
+                  child: Image.asset(spirit.mascot, width: 148),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: KlimaSpacing.lg),
+          for (final p in SpiritPalette.all) _MascotRow(p),
+        ],
+      ),
+    );
+  }
+}
+
+class _MascotRow extends StatelessWidget {
+  const _MascotRow(this.p);
+
+  final SpiritPalette p;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: KlimaSpacing.sm),
+      child: Row(
+        children: [
+          _Checker(size: 72, child: Image.asset(p.mascot, width: 72)),
+          const SizedBox(width: KlimaSpacing.xs),
+          Container(
+            width: 72,
+            height: 72,
+            decoration: BoxDecoration(
+              color: p.ground,
+              borderRadius: KlimaRadii.tileAll,
+              boxShadow: KlimaShadows.spirit(p.ink),
+            ),
+            child: Image.asset(p.mascot),
+          ),
+          const SizedBox(width: KlimaSpacing.sm),
+          // Avatar Circle 31:292: lingkaran 32 dengan gambar 26.
+          Container(
+            width: 32,
+            height: 32,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: p.ground,
+              shape: BoxShape.circle,
+              border: Border.all(color: p.platform),
+            ),
+            child: Image.asset(p.mascot, width: 26),
+          ),
+          const SizedBox(width: KlimaSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(p.displayName, style: _ink(KlimaTypography.section)),
+                Text(
+                  p.mascot,
+                  style: _ink(KlimaTypography.caption, KlimaColors.greenSoft),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Papan catur abu-abu: bagian transparan gambar akan memperlihatkan pola ini.
+class _Checker extends StatelessWidget {
+  const _Checker({required this.child, this.size = 160});
+
+  final Widget child;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: KlimaRadii.tileAll,
+      child: CustomPaint(
+        painter: const _CheckerPainter(),
+        child: SizedBox.square(dimension: size, child: child),
+      ),
+    );
+  }
+}
+
+class _CheckerPainter extends CustomPainter {
+  const _CheckerPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const cell = 8.0;
+    final light = Paint()..color = const Color(0xFFFFFFFF);
+    final dark = Paint()..color = const Color(0xFFD0D0D0);
+    for (var y = 0.0; y < size.height; y += cell) {
+      for (var x = 0.0; x < size.width; x += cell) {
+        final odd = ((x / cell).floor() + (y / cell).floor()).isOdd;
+        canvas.drawRect(Rect.fromLTWH(x, y, cell, cell), odd ? dark : light);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_CheckerPainter oldDelegate) => false;
 }
 
 // ---------------------------------------------------------------- layout
