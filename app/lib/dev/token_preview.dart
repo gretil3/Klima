@@ -1,11 +1,11 @@
 // Halaman pratinjau token desain (khusus pengembangan, BUKAN bagian app).
 // Jalankan terpisah dari main.dart:
 //   flutter run -d chrome -t lib/dev/token_preview.dart
-// Font masih bawaan Flutter; Nunito baru dipasang di langkah 2.
+// Memakai KlimaTheme.light() (langkah 2): Nunito lokal + ThemeData dari token.
 
 import 'package:material_ui/material_ui.dart';
 
-import '../core/theme/tokens.dart';
+import '../core/theme/theme.dart';
 
 void main() => runApp(const TokenPreviewApp());
 
@@ -14,10 +14,11 @@ class TokenPreviewApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Klima · Token',
       debugShowCheckedModeBanner: false,
-      home: TokenPreviewPage(),
+      theme: KlimaTheme.light(),
+      home: const TokenPreviewPage(),
     );
   }
 }
@@ -28,7 +29,7 @@ class TokenPreviewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KlimaColors.mintGround,
+      // Latar mintGround sekarang datang dari tema (scaffoldBackgroundColor).
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(
@@ -43,6 +44,7 @@ class TokenPreviewPage extends StatelessWidget {
             _RampSection(),
             _SpiritSection(),
             _TypeSection(),
+            _WeightSection(),
             _SpacingSection(),
             _RadiusSection(),
             _ShadowSection(),
@@ -130,7 +132,7 @@ class _Intro extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Klima', style: _ink(KlimaTypography.display)),
-        Text('Token desain · langkah 1', style: _ink(KlimaTypography.title)),
+        Text('Token desain · langkah 2', style: _ink(KlimaTypography.title)),
         const SizedBox(height: KlimaSpacing.sm),
         Container(
           padding: const EdgeInsets.all(KlimaSpacing.sm),
@@ -140,7 +142,7 @@ class _Intro extends StatelessWidget {
           ),
           child: Text(
             'Semua nilai di halaman ini dibaca dari konstanta di '
-            'lib/core/theme/. Font masih bawaan Flutter; Nunito dipasang di langkah 2.',
+            'lib/core/theme/. Font Nunito dibundel lokal (700/800/900), tema dari KlimaTheme.light().',
             style: _ink(KlimaTypography.meta),
           ),
         ),
@@ -532,6 +534,75 @@ class _TypeSection extends StatelessWidget {
                   ],
                 ),
               ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Bukti langkah 2: tiga berat Nunito harus terlihat berbeda, teks TANPA gaya
+/// mengikuti tema (bodyMedium = body 15/700, warna onSurface = forest), dan warna
+/// spirit dibaca dari ThemeExtension, bukan dari konstanta.
+class _WeightSection extends StatelessWidget {
+  const _WeightSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final spirit = KlimaSpiritTheme.of(context).palette;
+    final base = KlimaTypography.header;
+    return _Section(
+      title: 'Berat Nunito',
+      node: 'Font lokal · 700 / 800 / 900',
+      fromFigma: false,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(KlimaSpacing.md),
+        decoration: const BoxDecoration(
+          color: KlimaColors.surface,
+          borderRadius: KlimaRadii.cardAll,
+          boxShadow: KlimaShadows.card,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final (label, w) in const [
+              ('700 Bold', FontWeight.w700),
+              ('800 ExtraBold', FontWeight.w800),
+              ('900 Black', FontWeight.w900),
+            ]) ...[
+              Text(
+                label,
+                style: _ink(KlimaTypography.caption, KlimaColors.greenSoft),
+              ),
+              Text(
+                'Hutan Mangrove PIK',
+                style: _ink(base.copyWith(fontWeight: w)),
+              ),
+              const SizedBox(height: KlimaSpacing.xs),
+            ],
+            const Divider(height: KlimaSpacing.xl),
+            Text(
+              'Teks tanpa gaya (dari tema)',
+              style: _ink(KlimaTypography.caption, KlimaColors.greenSoft),
+            ),
+            const Text('Mulai 9 hari lagi di Jakarta Utara'),
+            const SizedBox(height: KlimaSpacing.md),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: KlimaSpacing.sm,
+                vertical: KlimaSpacing.xs,
+              ),
+              decoration: BoxDecoration(
+                color: spirit.ground,
+                borderRadius: KlimaRadii.pillAll,
+                border: Border.all(color: spirit.platform),
+              ),
+              child: Text(
+                'Spirit dari tema: ${spirit.displayName}',
+                style: _ink(KlimaTypography.meta, spirit.ink),
+              ),
+            ),
           ],
         ),
       ),
